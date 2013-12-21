@@ -1,0 +1,12 @@
+
+*.exe
+[Bb]in/
+[Dd]ebug/
+[Rr]elease/
+[Pp]resthumb/
+exe/PowerPointWrapper.dll
+*.sdf
+*.suo
+*.user
+*.filters
+[Ii]pch/
