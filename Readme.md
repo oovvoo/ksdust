@@ -10,7 +10,7 @@ More features are coming in, and any kind of contribution is appreciated.
 
 
 ##How to Use
-- Download the bin.zip
+- Download the [bin.zip](//github.com/phutidus/ksdust/blob/master/bin.zip)
 - If your Windows cannot run any 64bit program, you'll have to download the source code and compile from scratch (See [How to Build From Source Code](#how-to-build-from-source-code))
 - Open the ksdust.exe, and you must allow the app to accept any network connection.
 - Open your presentation file, and switch PoewrPoint to slide show mode.
