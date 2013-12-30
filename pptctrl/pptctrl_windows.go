@@ -168,19 +168,26 @@ func presentationCurrentSlideName() string {
 	return strings.Replace(name, "\r", "<br />", -1)
 }
 
-// 傳回目前放映的投影片的備忘稿
+// 傳回目前放映的投影片的備忘稿，並在最前面加上目前投影片的進度（目前/全部投影片）
 func presentationCurrentSlideNote() string {
 	noteLen, _, err := syscall.Syscall(uintptr(procPresentationCurrentSlideNote), 2, uintptr(unsafe.Pointer(&noteBuffer)), uintptr(_NoteBufferLength), 0)
 	if err != 0 {
 		fmt.Println("PresentationCurrentSlideNote error:", err)
 	}
 
+	var note string
 	if noteLen < 1 {
-		return "(未取得備忘稿)"
+		note = "(未取得備忘稿)"
+	} else {
+		note = string(noteBuffer[:int(noteLen)])
+		note = strings.Replace(note, "\r", "<br />", -1)
 	}
 
-	note := string(noteBuffer[:int(noteLen)])
-	return strings.Replace(note, "\r", "<br />", -1)
+	slideIndex := presentationCurrentSlideIndex()
+	allSlidesCount := presentationTotalSlidesCount()
+	presentationProgress := strconv.Itoa(int(slideIndex)) + "/" + strconv.Itoa(int(allSlidesCount)) + `<br />`
+
+	return presentationProgress + note
 }
 
 // deletes all file in a foler, and create thumbnails of active slideshow.
@@ -239,7 +246,7 @@ func runEventLoop() {
 			switch c.Data[1] {
 			case 'l': // 要求下一張投影片的縮圖網址
 				nextSlideIndex := presentationCurrentSlideIndex() + 1
-				c.Response <- (`/presthumbnail/` + strconv.Itoa(int64(nextSlideIndex)))
+				c.Response <- (`/presthumbnail/` + strconv.Itoa(int(nextSlideIndex)))
 			case 'p': // 切換下一張投影片 & 要求目前投影片的備忘稿
 				presentationPreviousSlide()
 				c.Response <- presentationCurrentSlideNote()
